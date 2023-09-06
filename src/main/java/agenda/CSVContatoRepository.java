@@ -1,15 +1,14 @@
 package agenda;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class CSVContatoRepository implements ContatoRepository {
-    private String jsonFilePath;
+    private String csvFilePath;
 
-    public CSVContatoRepository(String jsonFilePath) {
-        this.jsonFilePath = jsonFilePath;
+    public CSVContatoRepository(String csvFilePath) {
+        this.csvFilePath = csvFilePath;
     }
 
     public CSVContatoRepository() {
@@ -18,12 +17,17 @@ public class CSVContatoRepository implements ContatoRepository {
 
     @Override
     public void insertData(Agenda ag) {
-        ObjectMapper mapper = new ObjectMapper();
-        try (FileWriter writer = new FileWriter(jsonFilePath,true)) {
-            mapper.writeValue(writer, ag);
-            System.out.println("Contato inserido em JSON com sucesso.");
+        try (FileWriter writer = new FileWriter(csvFilePath, true)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(ag.getNome()).append(",");
+            sb.append(ag.getEmail()).append(",");
+            sb.append(ag.getTelefone()).append("\n");
+
+            writer.write(sb.toString());
+            System.out.println("Contato inserido em CSV com sucesso.");
         } catch (IOException e) {
-            System.out.println("Erro ao inserir contato em JSON: " + e.getMessage());
+            System.out.println("Erro ao inserir contato em CSV: " + e.getMessage());
         }
     }
+
 }
